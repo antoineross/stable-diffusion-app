@@ -6,8 +6,10 @@ from torch import autocast
 from diffusers import StableDiffusionPipeline
 from io import BytesIO
 import base64 
+from dotenv import load_dotenv
 
 app = FastAPI()
+# load_dotenv()
 
 app.add_middleware(
     CORSMiddleware, 
@@ -19,7 +21,7 @@ app.add_middleware(
 
 device = "cuda"
 model_id = "CompVis/stable-diffusion-v1-4"
-pipe = StableDiffusionPipeline.from_pretrained(model_id, revision="fp16", torch_dtype=torch.float16, use_auth_token=auth_token)
+pipe = StableDiffusionPipeline.from_pretrained(model_id, revision="fp16", torch_dtype=torch.float16)
 pipe.to(device)
 
 @app.get("/")
@@ -28,6 +30,8 @@ def generate(prompt: str):
         image = pipe(prompt, guidance_scale=8.5).images[0]
 
     image.save("testimage.png")
+    
+    # return {"out": "hello world"}
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     imgstr = base64.b64encode(buffer.getvalue())

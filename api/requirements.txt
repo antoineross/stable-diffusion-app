@@ -1,0 +1,10 @@
+accelerate
+torch 
+torchvision
+setuptools_rust
+transformers 
+scipy 
+ftfy
+# pip install -U git+https://github.com/huggingface/diffusers.git
+fastapi
+uvicorn
